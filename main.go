@@ -1,7 +1,6 @@
 package main
 
-import "fmt"
-
 func main() {
-	fmt.Println("Go bank")
+	server := NewAPIServer(":3000")
+	server.Run()
 }
