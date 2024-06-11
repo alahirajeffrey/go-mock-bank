@@ -2,6 +2,8 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -40,12 +42,21 @@ func NewAPIServer(listenAddr string) *APIServer {
 func (s *APIServer) Run () {
 	router := mux.NewRouter()
 
+	log.Println("Server running on port : ", s.listenAddr)
 	router.HandleFunc("/account", makeHTTPHandlerFunc(s.handleAccount))
+
+	http.ListenAndServe(s.listenAddr, router)
 }
 
 func (s *APIServer) handleAccount(w http.ResponseWriter, r *http.Request) error {
-	return nil
-}
+	if r.Method == "GET" {s.handleGetAccount(w, r)}
+
+	if r.Method == "POST" {s.handleCreateAccount(w, r)}
+
+	if r.Method == "DELETE" {s.handleDeleteAccount(w, r)}
+
+	return fmt.Errorf("method not allowed %s", r.Method)	
+ }
 
 func (s *APIServer) handleGetAccount(w http.ResponseWriter, r *http.Request) error {
 	return nil
